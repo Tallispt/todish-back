@@ -1,0 +1,31 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model sessions {
+  id      Int    @id(map: "sessions_pk") @default(autoincrement())
+  user_id Int
+  token   String @unique
+  users   users  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "sessions_fk0")
+}
+
+model todos {
+  id      Int     @id(map: "todos_pk") @default(autoincrement())
+  user_id Int
+  name    String
+  done    Boolean @default(false)
+  users   users   @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "todos_fk0")
+}
+
+model users {
+  id       Int        @id(map: "users_pk") @default(autoincrement())
+  username String     @unique
+  password String
+  sessions sessions[]
+  todos    todos[]
+}
