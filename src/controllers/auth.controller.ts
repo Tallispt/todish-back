@@ -16,7 +16,7 @@ async function signin(req: Request, res: Response) {
         if (!isPasswordValid) return res.sendStatus(401)
 
         const token = jwt.sign({ userId: userData.id }, process.env.JWT_SECRET)
-        console.log(token)
+
         await sessionRepository.create({ user_id: userData.id, token })
 
         res.status(200).send({ username, token })
