@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
-import { SignUp, UserData } from "../protocols/auth.protocols.js";
+import { SignUp } from "../protocols/auth.protocols.js";
 import userRepository from "../repositories/user.repository.js";
 import jwt from "jsonwebtoken";
 import sessionRepository from "../repositories/session.repository.js";
 
 async function signin(req: Request, res: Response) {
-    const { username, password } = req.body as UserData
+    const { username, password } = req.body as Omit<SignUp, 'confirmPassword'>
 
     try {
         const userData = await userRepository.findUserByUsername(username)
@@ -21,7 +21,6 @@ async function signin(req: Request, res: Response) {
 
         res.status(200).send({ username, token })
     } catch (error) {
-        console.log(error)
         res.sendStatus(500)
     }
 }
@@ -38,7 +37,7 @@ async function signup(req: Request, res: Response) {
             username,
             password: hashPassword
         })
-        res.sendStatus(200)
+        res.sendStatus(201)
 
     } catch (error) {
         res.sendStatus(500)

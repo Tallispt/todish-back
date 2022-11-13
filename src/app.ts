@@ -1,15 +1,17 @@
-import express from 'express';
 import cors from 'cors';
-import { authRouter } from './routers/auth.router.js';
+import dotenv from 'dotenv';
+import express from 'express';
+import authRouter from './routers/auth.router.js';
+import todoRouter from './routers/todo.router.js';
+
+dotenv.config()
 
 const app = express()
 app
     .use(cors())
     .use(express.json())
     .use(authRouter)
+    .use(todoRouter)
 
-
-import dotenv from 'dotenv';
-dotenv.config()
 
 app.listen(process.env.PORT, () => console.log(`Listening to port ${process.env.PORT}`))

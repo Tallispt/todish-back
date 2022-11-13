@@ -3,5 +3,3 @@ export type SignUp = {
     password: string,
     confirmPassword: string
 }
-
-export type UserData = Omit<SignUp, 'confirmPassword'>

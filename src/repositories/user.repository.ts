@@ -7,11 +7,7 @@ async function create(data: Prisma.usersUncheckedCreateInput) {
 }
 
 async function findUserByUsername(username: string) {
-    return prisma.users.findUnique({
-        where: {
-            username
-        }
-    })
+    return prisma.users.findUnique({ where: { username } })
 }
 
 const userRepository = {

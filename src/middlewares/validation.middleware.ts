@@ -8,7 +8,7 @@ export function validate(schema: ObjectSchema) {
         })
 
         if (error) {
-            res.status(400).send(error.details.map(e => e.message))
+            res.status(422).send(error.details.map(e => e.message))
         } else next()
     }
 }
