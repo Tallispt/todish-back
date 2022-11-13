@@ -3,15 +3,20 @@ import { prisma } from "../database/prisma.js";
 
 async function create(data: Prisma.usersUncheckedCreateInput) {
     return prisma.users.create({ data });
+
 }
 
-function findAll() {
-    return prisma.users.findMany()
+async function findUserByUsername(username: string) {
+    return prisma.users.findUnique({
+        where: {
+            username
+        }
+    })
 }
 
 const userRepository = {
     create,
-    findAll
+    findUserByUsername
 };
 
 export default userRepository;

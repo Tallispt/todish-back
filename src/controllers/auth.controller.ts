@@ -1,49 +1,51 @@
 import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
 import { SignUp, UserData } from "../protocols/auth.protocols.js";
-import { signinSchema, signupSchema } from "../schemas/auth.schema.js";
 import userRepository from "../repositories/user.repository.js";
+import jwt from "jsonwebtoken";
+import sessionRepository from "../repositories/session.repository.js";
 
 async function signin(req: Request, res: Response) {
-    const data = req.body as UserData
-
-    const { error } = signinSchema.validate(data)
-    if (error) return res.status(403).send(error.message)
+    const { username, password } = req.body as UserData
 
     try {
-        res.sendStatus(200)
+        const userData = await userRepository.findUserByUsername(username)
+        if (!userData) return res.sendStatus(404)
+
+        const isPasswordValid = await bcrypt.compare(password, userData.password)
+        if (!isPasswordValid) return res.sendStatus(401)
+
+        const token = jwt.sign({ userId: userData.id }, process.env.JWT_SECRET)
+        console.log(token)
+        await sessionRepository.create({ user_id: userData.id, token })
+
+        res.status(200).send({ username, token })
     } catch (error) {
-        res.sendStatus(400)
+        console.log(error)
+        res.sendStatus(500)
     }
 }
 
 async function signup(req: Request, res: Response) {
-    const { username, password, confirmPassword } = req.body as SignUp
-
-    const { error } = signupSchema.validate({ username, password, confirmPassword })
-    if (error) return res.status(403).send(error.message)
+    const { username, password } = req.body as SignUp
 
     const salt = await bcrypt.genSalt(12);
     const hashPassword = await bcrypt.hash(password, salt)
 
-    const data: UserData = {
-        username,
-        password: hashPassword
-    }
 
     try {
-        await userRepository.create(data)
+        await userRepository.create({
+            username,
+            password: hashPassword
+        })
         res.sendStatus(200)
-        //await connection.query("INSERT INTO users (username, password) VALUES($1, $2), [data.username, hashPassword]")
 
     } catch (error) {
-        res.sendStatus(400)
+        res.sendStatus(500)
     }
 }
 
-const authControllers = {
+export {
     signin,
     signup
 }
-
-export default authControllers
