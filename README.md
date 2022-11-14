@@ -1,6 +1,6 @@
 # todish-back
 
-Todish is a todo list api made in typescript with NodeJs and Prisma (PostgresDB).
+Todish is a todo list api made in typescript with NodeJs and Prisma (Postgresql).
 
 ## Routes
 
