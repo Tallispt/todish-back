@@ -6,10 +6,13 @@ async function find() {
     return await prisma.todos.findMany()
 }
 
-async function findBytodoId(todoId: number) {
-    return await prisma.todos.findUnique({ where: { id: todoId } })
+async function findByTodoId(todoId: number) {
+    return await prisma.todos.findUnique({
+        where: {
+            id: todoId
+        }
+    })
 }
-
 
 async function create(data: Prisma.todosUncheckedCreateInput) {
     return await prisma.todos.create({ data })
@@ -31,12 +34,29 @@ async function delet(todoId: number) {
     return await prisma.todos.delete({ where: { id: todoId } })
 }
 
+async function countByUserId(userId: number) {
+    const dones = await prisma.todos.count({
+        where: {
+            user_id: userId,
+            done: true
+        }
+    })
+    const notDones = await prisma.todos.count({
+        where: {
+            user_id: userId,
+            done: false
+        }
+    })
+    return { dones, notDones, total: dones + notDones }
+}
+
 const todoRepositories = {
     find,
-    findBytodoId,
+    findByTodoId,
     create,
     edit,
-    delet
+    delet,
+    countByUserId
 }
 
 export default todoRepositories

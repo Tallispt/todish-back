@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import bcrypt from 'bcrypt';
-import { SignUp } from "../protocols/auth.protocols.js";
+import { SignUp } from "../protocols/index.js";
 import userRepository from "../repositories/user.repository.js";
 import jwt from "jsonwebtoken";
 import sessionRepository from "../repositories/session.repository.js";

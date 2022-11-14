@@ -7,12 +7,25 @@ async function create(data: Prisma.usersUncheckedCreateInput) {
 }
 
 async function findUserByUsername(username: string) {
-    return prisma.users.findUnique({ where: { username } })
+    return prisma.users.findUnique({
+        where: {
+            username
+        }
+    })
+}
+
+async function findUserByUserId(id: number) {
+    return prisma.users.findUnique({
+        where: {
+            id
+        }
+    })
 }
 
 const userRepository = {
     create,
-    findUserByUsername
+    findUserByUsername,
+    findUserByUserId
 };
 
 export default userRepository;
