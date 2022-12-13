@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client"
 import { when } from "joi"
-import { prisma } from "../database/prisma.js"
+import { prisma } from "../config/prisma.js"
 
 async function find() {
     return await prisma.todos.findMany()

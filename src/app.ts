@@ -1,10 +1,11 @@
 import cors from 'cors';
-import dotenv from 'dotenv';
 import express from 'express';
-import authRouter from './routers/auth.router.js';
-import todoRouter from './routers/todo.router.js';
+import authRouter from '@/routers/auth.router.js';
+import todoRouter from '@/routers/todo.router.js';
+import { loadEnv } from '@/config/env.js';
+import { connectDb } from '@/config/prisma.js';
 
-dotenv.config()
+loadEnv()
 
 const app = express()
 app
@@ -13,5 +14,9 @@ app
     .use(authRouter)
     .use(todoRouter)
 
+export function init() {
+    connectDb();
+    return Promise.resolve(app);
+}
 
-app.listen(process.env.PORT, () => console.log(`Listening to port ${process.env.PORT}`))
+export default app;
